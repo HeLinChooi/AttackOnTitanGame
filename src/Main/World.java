@@ -35,28 +35,41 @@ public class World {
         }
     }
 
-    public void playerTurn(Weapon[] weapons, boolean[] weaponUpgradeAraay) {
+    public void playerTurn(Weapon[] weapons) {
+        Scanner s = new Scanner(System.in);
         System.out.println("Player's turn");
+        System.out.println("Choose the weapon you would like to upgrade");
+        boolean[] weaponUpgradeAraay = new boolean[10];
+        String inputs = s.nextLine();
+        for (int j = 0; j < inputs.length(); j++) {
+//            if (inputs.contains(Integer.toString(inputs.charAt(j)))) {
+                weaponUpgradeAraay[Integer.parseInt(inputs.substring(j,j+1))] = true;
+//            }
+        }
+        for (int i = 0; i < 10; i++) {
+            System.out.println(weaponUpgradeAraay[i]);
+        }
         for (int i = 0; i < weapons.length; i++) {
             // if player want to upgrade this weapon
             if (weaponUpgradeAraay[i]) {
-                if (weapons[i] == null) {
-                    // new weapon built!
-                    weapons[i] = new Weapon();
-                } 
-//                else {
-//                    weapons[i].upLevel();
-//                }
+                weapons[i].upLevel();
             }
         }
+        System.out.println("After upgrading, the weapons' level");
+        for (int i = 0; i < weapons.length; i++) {
+            System.out.print(weapons[i].getLevel() + "  ");
+        }
+        System.out.println("");
+        System.out.println("");
     }
 
     public void run() {
-        Random r = new Random();
-        Scanner s = new Scanner(System.in);
         Wall w = new Wall(10);
-        // setup weapon reference, no weapon there yet
+        // setup weapon reference, all weapon level 0
         Weapon[] weapons = new Weapon[10];
+        for (int i = 0; i < weapons.length; i++) {
+            weapons[i] = new Weapon();
+        }
         ColossusTitan c = new ColossusTitan();
         // start the game
         System.out.println("The game started.");
@@ -72,23 +85,17 @@ public class World {
                 break;
             }
             // player's turn
-            boolean[] weaponUpgradeAraay = new boolean[10];
-            for (int j = 0; j < weaponUpgradeAraay.length; j++) {
-                if (j == 0) {
-                    weaponUpgradeAraay[j] = true;
-                }
-            }
-            playerTurn(weapons, weaponUpgradeAraay);
+            playerTurn(weapons);
             // attack the titan with our new upgraded weapons!
             for (int j = 0; j < weapons.length; j++) {
                 // the titan is on this position
-                if(c.getInfrontWallIndex() == j){
+                if (c.getInfrontWallIndex() == j) {
                     // attack him
                     c.reduceHP(weapons[j].attack());
                 }
             }
             // check if the titam is dead
-            if(c.isDead()){
+            if (c.isDead()) {
                 System.out.println("YOU WIN!");
                 break;
             }

@@ -6,9 +6,9 @@ public class Weapon {
     // level 1 = attack value 2
     // level 2 = attack value 5
     // level 3 = attack value 10
-    private int level = 1;
+    private int level = 0;
     private final int maxLevel = 3;
-    private final int[] attack = {2, 5, 10};
+    private final int[] attack = {0,2, 5, 10};
 
     public boolean upLevel() {
         int currentLevel = getLevel();
@@ -32,6 +32,6 @@ public class Weapon {
     }
 
     public int attack() {
-        return attack[level-1];
+        return attack[level];
     }
 }
