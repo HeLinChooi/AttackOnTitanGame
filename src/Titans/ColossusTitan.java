@@ -1,12 +1,13 @@
 package Titans;
 
+import java.util.Random;
+
 public class ColossusTitan {
 
     private int hp;
     private int initialHp;
     private int attack;
     private static final int attackHours = 10;
-    private static final int rechargeHours = 5;
     private int hoursRemained = 0;
     private boolean showUp = false;
     private int infrontWallIndex = 0;
@@ -40,12 +41,12 @@ public class ColossusTitan {
     }
 
     public void setShowUp(boolean showUp) {
+        Random r = new Random();
         // if toggle from false to true
         if (showUp) {
             setHp(initialHp);
+            setInfrontWallIndex(r.nextInt(10));
             setHoursRemained(attackHours);
-        } else {
-            setHoursRemained(rechargeHours);
         }
         this.showUp = showUp;
     }
@@ -70,8 +71,8 @@ public class ColossusTitan {
         // only he show up then can take damage
         if (isShowUp()) {
             System.out.println("The Colossus Titan take " + amount + " points damage");
-            System.out.println("Remain HP: " + getHp());
             this.hp -= amount;
+            System.out.println("Remain HP: " + getHp());
         }
     }
 

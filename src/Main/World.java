@@ -36,28 +36,6 @@ public class World {
 
     public void enemiesTurn(Wall w, ColossusTitan c) {
         Random r = new Random();
-        // uncomment this line if you want the titan to be able to disappear
-//        if (c.isShowUp()) {
-//            if (c.getHoursRemained() > 0) {
-//                w.reduceHPOn1Unit(c.attack(), c.getInfrontWallIndex());
-//                int hrs = c.getHoursRemained();
-//                c.setHoursRemained(--hrs);
-//            } else {
-//                System.out.println("Titan disappear!");
-//                c.setShowUp(!c.isShowUp());
-//            }
-//        } else {
-//            // in front of random wall unit
-//            // !!!!!!!
-//            if (c.getHoursRemained() > 0) {
-//                int hrs = c.getHoursRemained();
-//                c.setHoursRemained(--hrs);
-//            } else {
-//                c.setShowUp(!c.isShowUp());
-//                System.out.println("Titan show up and hit the wall!");
-//                w.reduceHPOn1Unit(c.attack(), c.getInfrontWallIndex());
-//            }
-//        }
         if (!c.isShowUp()) {
             c.setShowUp(!c.isShowUp());
             System.out.println(String.format("Titan show up and hit wall %d !", c.getInfrontWallIndex()));
