@@ -12,6 +12,10 @@ public class Wall {
         buildUpWall();
     }
 
+    public int getWallLength() {
+        return wallLength;
+    }
+
     private void buildUpWall() {
         for (int i = 0; i < wall.length; i++) {
             wall[i] = 50;
@@ -43,7 +47,7 @@ public class Wall {
         for (int i = 0; i < wall.length; i++) {
             expenses += amount;
         }
-        if(money < expenses){
+        if (money < expenses) {
             System.out.println("Your money is not enough");
             return 0;
         }
@@ -58,12 +62,13 @@ public class Wall {
     }
 
     public int addHPOn1Unit(int money, int amount, int index) {
-        wall[index] += amount;
-        if(money < amount){
+        if (money < amount) {
             System.out.println("Your money is not enough");
             return 0;
+        } else {
+            wall[index] += amount;
+            return amount;
         }
-        return amount;
     }
 
     public boolean isWallHasFallen() {
