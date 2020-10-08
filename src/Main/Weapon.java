@@ -8,18 +8,24 @@ public class Weapon {
     // level 3 = attack value 10
     private int level = 0;
     private final int maxLevel = 3;
-    private final int[] attack = {0,2, 5, 10};
+    private final int[] attack = {0 ,2, 5, 10};
+    private final int[] moneyRequiredForEachLevel = {0 ,2, 5, 10};
 
-    public boolean upLevel() {
+    // return the expenses
+    public int upLevel(int moneyAmount) {
+        if(level < 3 && moneyAmount < moneyRequiredForEachLevel[level+1]){
+            System.out.println("Not enough money!");
+            return 0;
+        }
         int currentLevel = getLevel();
         int tempLevel = currentLevel;
         if (tempLevel < maxLevel) {
             tempLevel++;
             setLevel(tempLevel);
-            return true;
+            return moneyRequiredForEachLevel[tempLevel];
         } else {
             System.out.println("This weapon already reach level 3.");
-            return false;
+            return 0;
         }
     }
 

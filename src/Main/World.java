@@ -6,7 +6,25 @@ import java.util.Scanner;
 
 public class World {
 
-    public static int money = 100;
+    private int money = 40;
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public void spendMoney(int amount) {
+        int money = getMoney();
+        money -= amount;
+        if (money < 0) {
+            setMoney(0);
+        } else {
+            setMoney(money);
+        }
+    }
 
     public boolean randomTrueOrFalse() {
         Random r = new Random();
@@ -35,32 +53,44 @@ public class World {
         }
     }
 
-    public void playerTurn(Weapon[] weapons) {
+    public void upgradeWeapons(Weapon[] weapons) {
         Scanner s = new Scanner(System.in);
-        System.out.println("Player's turn");
-        System.out.println("Choose the weapon you would like to upgrade");
+        System.out.println("Choose the weapon you would like to upgrade then hit ENTER to hit the titans");
         boolean[] weaponUpgradeAraay = new boolean[10];
         String inputs = s.nextLine();
         for (int j = 0; j < inputs.length(); j++) {
-//            if (inputs.contains(Integer.toString(inputs.charAt(j)))) {
-                weaponUpgradeAraay[Integer.parseInt(inputs.substring(j,j+1))] = true;
-//            }
+            weaponUpgradeAraay[Integer.parseInt(inputs.substring(j, j + 1))] = true;
         }
-        for (int i = 0; i < 10; i++) {
-            System.out.println(weaponUpgradeAraay[i]);
-        }
+//        for (int i = 0; i < 10; i++) {
+//            System.out.println(weaponUpgradeAraay[i]);
+//        }
         for (int i = 0; i < weapons.length; i++) {
             // if player want to upgrade this weapon
             if (weaponUpgradeAraay[i]) {
-                weapons[i].upLevel();
+                int expense = weapons[i].upLevel(money);
+                spendMoney(expense);
             }
         }
-        System.out.println("After upgrading, the weapons' level");
-        for (int i = 0; i < weapons.length; i++) {
-            System.out.print(weapons[i].getLevel() + "  ");
+        System.out.println("");
+    }
+
+    public void upgradeWall(Wall w) {
+        Scanner s = new Scanner(System.in);
+        System.out.println("Do you want to upgrade all walls? (0 = no, 1 = yes)");
+        int input = s.nextInt();
+        if (input == 1) {
+            System.out.println("How many HP do you want to add up?");
+            int amount = s.nextInt();
+            int expenses = w.addHPForAll(money, amount);
+            spendMoney(expenses);
         }
-        System.out.println("");
-        System.out.println("");
+    }
+
+    public void playerTurn(Weapon[] weapons, Wall w) {
+        Scanner s = new Scanner(System.in);
+        System.out.println("Player's turn");
+        upgradeWeapons(weapons);
+        upgradeWall(w);
     }
 
     public void run() {
@@ -73,19 +103,22 @@ public class World {
         ColossusTitan c = new ColossusTitan();
         // start the game
         System.out.println("The game started.");
-        w.printWallWithHP();
+        w.printWallWithHP(weapons);
         for (int i = 1; i <= 10; i++) {
             // n th hour
             System.out.println("HOUR " + i);
+            System.out.println("Money: " + getMoney());
             enemiesTurn(w, c);
-            w.printWallWithHP();
+            w.printWallWithHP(weapons);
             if (w.isWallHasFallen()) {
                 System.out.println("THE WALL HAS FALLEN");
                 System.out.println("YOU LOST");
                 break;
             }
             // player's turn
-            playerTurn(weapons);
+            playerTurn(weapons, w);
+            // Show Result
+            System.out.println("Result ---------------------------------");
             // attack the titan with our new upgraded weapons!
             for (int j = 0; j < weapons.length; j++) {
                 // the titan is on this position
@@ -99,6 +132,9 @@ public class World {
                 System.out.println("YOU WIN!");
                 break;
             }
+            System.out.println("Money + 5 at night\n");
+            setMoney(getMoney() + 5);
+            System.out.println("----------------------------------------");
         }
     }
 }

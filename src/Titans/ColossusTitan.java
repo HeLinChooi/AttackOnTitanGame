@@ -9,7 +9,7 @@ public class ColossusTitan {
     private int infrontWallIndex = 0;
 
     public ColossusTitan() {
-        this.hp = 4;
+        this.hp = 50;
         this.attack = 10;
         this.attackInterval = 5;
     }
