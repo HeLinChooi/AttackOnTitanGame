@@ -9,7 +9,7 @@ public class ColossusTitan {
     private int infrontWallIndex = 0;
 
     public ColossusTitan() {
-        this.hp = 100;
+        this.hp = 4;
         this.attack = 10;
         this.attackInterval = 5;
     }
@@ -51,6 +51,7 @@ public class ColossusTitan {
     public void reduceHP(int amount) {
         // only he show up then can take damage
         if (isShowUp()) {
+            System.out.println("The Colossus Titan take " + amount + " points damage");
             this.hp -= amount;
         }
     }
