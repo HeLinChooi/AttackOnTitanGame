@@ -1,5 +1,6 @@
 package Main;
 
+import Titans.ArmouredTitan;
 import Titans.ColossusTitan;
 import java.util.Random;
 import java.util.Scanner;
@@ -34,8 +35,9 @@ public class World {
         return temp >= bound;
     }
 
-    public void enemiesTurn(Wall w, ColossusTitan c) {
+    public void enemiesTurn(Wall w, Weapon[] weapons, ColossusTitan c, ArmouredTitan a) {
         Random r = new Random();
+        System.out.println("Enemies' turn");
         if (!c.isShowUp()) {
             c.setShowUp(!c.isShowUp());
             System.out.println(String.format("Titan show up and hit wall %d !", c.getInfrontWallIndex()));
@@ -54,6 +56,46 @@ public class World {
             System.out.println(String.format("Titan continue to destroy wall %d !", c.getInfrontWallIndex()));
             w.reduceHPOn1Unit(c.attack(), c.getInfrontWallIndex());
         }
+        // Armoured Titan
+        if (!a.isShowUp()) {
+            if (r.nextInt(2) == 1) {
+                System.out.println("Armoued Titan show up!");
+                a.setShowUp(true);
+            }
+        } else {
+            if (a.getDistanceFromWall() == 0) {
+                System.out.println("Armoured titan on the wall!");
+                // if the weapon is in front of titan
+                int position = a.getInfrontWallIndex();
+//                for (int i = 0; i < weapons.length; i++) {
+//                    if (i == a.getInfrontWallIndex()) {
+                if (weapons[position].getLevel() > 0) {
+                    System.out.println("got weapon");
+                    weapons[position].levelDownTo0();
+                } else if (weapons[position].getLevel() == 0 && !isNoWeapons(weapons)) {
+                    System.out.println("no weapon here but got other weapon and move to other weapon");
+                    // if still got weapons on wall, destroy the weapons first
+                    a.getCloserToWeapon(weapons);
+                } else if (isNoWeapons(weapons)) {
+                    System.out.println("no weapon on wall any more");
+                    w.reduceHPOn1Unit(a.attack(), position);
+                }
+//                    }
+//                }
+            } else {
+                System.out.println("current distance: " + a.getDistanceFromWall());
+                a.getCloserToWall();
+            }
+        }
+    }
+
+    public boolean isNoWeapons(Weapon[] weapons) {
+        for (int i = 0; i < weapons.length; i++) {
+            if (weapons[i].getLevel() > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void upgradeWeapons(Weapon[] weapons) {
@@ -110,21 +152,24 @@ public class World {
 
     public void run() {
         Wall w = new Wall(10);
+        Ground g = new Ground(10);
         // setup weapon reference, all weapon level 0
         Weapon[] weapons = new Weapon[10];
         for (int i = 0; i < weapons.length; i++) {
             weapons[i] = new Weapon();
         }
         ColossusTitan c = new ColossusTitan();
+        ArmouredTitan a = new ArmouredTitan();
         // start the game
         System.out.println("The game started.");
-        for (int i = 1; i <= 24; i++) {
+        for (int i = 0; i <= 24; i++) {
             // n th hour
             System.out.println("HOUR " + i);
             System.out.println("Money: " + getMoney());
-            if (i > 5) {
-                enemiesTurn(w, c);
-            }
+//            if (i > 5) {
+            enemiesTurn(w, weapons, c, a);
+//            }
+            g.printGround(c, a);
             w.printWallWithHP(weapons);
             if (w.isWallHasFallen()) {
                 System.out.println("THE WALL HAS FALLEN");

@@ -40,4 +40,7 @@ public class Weapon {
     public int attack() {
         return attack[level];
     }
+    public void levelDownTo0(){
+        this.level = 0;
+    }
 }
