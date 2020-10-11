@@ -118,13 +118,10 @@ public class World {
         ColossusTitan c = new ColossusTitan();
         // start the game
         System.out.println("The game started.");
-        w.printWallWithHP(weapons);
         for (int i = 1; i <= 24; i++) {
             // n th hour
             System.out.println("HOUR " + i);
             System.out.println("Money: " + getMoney());
-            // every hour the wall reduce hp by 1
-            w.reduceHPForAll();
             if (i > 5) {
                 enemiesTurn(w, c);
             }
@@ -156,7 +153,7 @@ public class World {
                 c.reduceHP(weapons[j].attack());
             }
         }
-        System.out.println("Money + 5 at night");
+        System.out.println("Money + 5");
         setMoney(getMoney() + 5);
 //        if (c.isShowUp()) {
 //            System.out.println(String.format("Titan still in front of the wall %d and he hit the wall", c.getInfrontWallIndex()));

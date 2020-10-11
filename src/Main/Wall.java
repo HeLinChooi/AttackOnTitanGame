@@ -23,12 +23,6 @@ public class Wall {
     }
 
     public void printWallWithHP(Weapon[] weapons) {
-        System.out.println("\nThe Wall -- -- -- -- -- -- --");
-        for (int i = 0; i < wall.length; i++) {
-            System.out.print(wall[i] + " ");
-        }
-        System.out.println("    HP");
-        System.out.println("-- -- -- -- -- -- -- -- -- --");
         int[] starRemain = new int[weapons.length];
         // copy array
         for (int i = 0; i < weapons.length; i++) {
@@ -36,28 +30,44 @@ public class Wall {
         }
         // print the star
         boolean isRemainStarNotPrinted = true;
-        while(isRemainStarNotPrinted){
+        while (isRemainStarNotPrinted) {
             isRemainStarNotPrinted = false;
+            // get the highest level
+            int maxLevel = 0;
             for (int i = 0; i < starRemain.length; i++) {
-                if(starRemain[i]>0){
+                if (starRemain[i] > 0) {
                     isRemainStarNotPrinted = true;
-                    break;
+                    if (starRemain[i] > maxLevel) {
+                        maxLevel = starRemain[i];
+                    }
                 }
             }
-            if(!isRemainStarNotPrinted){
+            if (!isRemainStarNotPrinted) {
                 break;
             }
-            for (int i = 0; i < starRemain.length; i++) {
-                if(starRemain[i]>0) System.out.print("** ");
-                else System.out.print("   ");
-                starRemain[i]--;
-            }
+//            for (int i = 0; i < starRemain.length; i++) {
+//                System.out.print(starRemain[i] + " ");
+//            }
             System.out.println("");
+
+            for (int i = 0; i < starRemain.length; i++) {
+                if (starRemain[i] == maxLevel) {
+                    System.out.print("** ");
+                    starRemain[i]--;
+//                    maxLevel--;
+                } else {
+                    System.out.print("   ");
+                }
+            }
+//            System.out.println("");
         }
-//        for (int i = 0; i < wall.length; i++) {
-//            System.out.print(weapons[i].getLevel() + "  ");
-//        }
-//        System.out.println("Weapon Level----------------️⤴️");
+        System.out.println("\n-- -- -- -- -- -- -- -- -- --     The Wall");
+        for (int i = 0; i < wall.length; i++) {
+            System.out.print(wall[i] + " ");
+        }
+        System.out.println("    HP");
+        System.out.println("-- -- -- -- -- -- -- -- -- --");
+
         System.out.println("");
     }
 
