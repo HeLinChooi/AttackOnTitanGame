@@ -53,7 +53,7 @@ public class World {
                     c.setInfrontWallIndex(c.getInfrontWallIndex() - 1);
                 }
             }
-            System.out.println(String.format("Titan continue to destroy wall %d !", c.getInfrontWallIndex()));
+            System.out.println(String.format("Colossus Titan continue to destroy wall %d !", c.getInfrontWallIndex()));
             w.reduceHPOn1Unit(c.attack(), c.getInfrontWallIndex());
         }
         // Armoured Titan
@@ -64,27 +64,27 @@ public class World {
             }
         } else {
             if (a.getDistanceFromWall() == 0) {
-                System.out.println("Armoured titan on the wall!");
+                System.out.println(String.format("Armoured Titan on wall %d !", a.getInfrontWallIndex()));
                 // if the weapon is in front of titan
                 int position = a.getInfrontWallIndex();
 //                for (int i = 0; i < weapons.length; i++) {
 //                    if (i == a.getInfrontWallIndex()) {
                 if (weapons[position].getLevel() > 0) {
-                    System.out.println("got weapon");
+//                    System.out.println("got weapon");
                     weapons[position].levelDownTo0();
                 } else if (weapons[position].getLevel() == 0 && !isNoWeapons(weapons)) {
-                    System.out.println("no weapon here but got other weapon and move to other weapon");
+//                    System.out.println("no weapon here but got other weapon and move to other weapon");
                     // if still got weapons on wall, destroy the weapons first
                     a.getCloserToWeapon(weapons);
                 } else if (isNoWeapons(weapons)) {
-                    System.out.println("no weapon on wall any more");
+//                    System.out.println("no weapon on wall any more");
                     w.reduceHPOn1Unit(a.attack(), position);
                 }
 //                    }
 //                }
             } else {
-                System.out.println("current distance: " + a.getDistanceFromWall());
                 a.getCloserToWall();
+                System.out.println("current distance: " + a.getDistanceFromWall());
             }
         }
     }
@@ -101,16 +101,18 @@ public class World {
     public void upgradeWeapons(Weapon[] weapons) {
         Scanner s = new Scanner(System.in);
         System.out.println("Choose the weapon(s) you would like to upgrade (Type a string of integer or hit Enter to skip)");
-        boolean[] weaponUpgradeAraay = new boolean[10];
+        int[] weaponUpgradeAraay = new int[10];
         String inputs = s.nextLine();
         for (int j = 0; j < inputs.length(); j++) {
-            weaponUpgradeAraay[Integer.parseInt(inputs.substring(j, j + 1))] = true;
+            weaponUpgradeAraay[Integer.parseInt(inputs.substring(j, j + 1))]++;
         }
         for (int i = 0; i < weapons.length; i++) {
             // if player want to upgrade this weapon
-            if (weaponUpgradeAraay[i]) {
-                int expense = weapons[i].upLevel(money);
-                spendMoney(expense);
+            if (weaponUpgradeAraay[i] > 0) {
+                for (int j = 0; j < weaponUpgradeAraay[i]; j++) {
+                    int expense = weapons[i].upLevel(money);
+                    spendMoney(expense);
+                }
             }
         }
     }
@@ -161,7 +163,6 @@ public class World {
         ColossusTitan c = new ColossusTitan();
         ArmouredTitan a = new ArmouredTitan();
         // start the game
-        System.out.println("The game started.");
         for (int i = 0; i <= 24; i++) {
             // n th hour
             System.out.println("HOUR " + i);
@@ -179,7 +180,7 @@ public class World {
             // player's turn
             playerTurn(weapons, w);
             // Show Result
-            showResult(c, weapons);
+            showResult(c, a, weapons, w, g);
             // check if the titam is dead
             if (c.isDead()) {
                 System.out.println("YOU WIN!");
@@ -188,14 +189,21 @@ public class World {
         }
     }
 
-    public void showResult(ColossusTitan c, Weapon[] weapons) {
+    public void showResult(ColossusTitan c, ArmouredTitan a, Weapon[] weapons, Wall w, Ground g) {
         System.out.println("---------------- Result ----------------");
+        g.printGround(c, a);
+        w.printWallWithHP(weapons);
         // attack the titan with our new upgraded weapons!
         for (int j = 0; j < weapons.length; j++) {
             // the titan is on this position
             if (c.getInfrontWallIndex() == j) {
                 // attack him
+
                 c.reduceHP(weapons[j].attack());
+            }
+            if (a.getInfrontWallIndex() == j) {
+                // attack him
+                a.reduceHP(weapons[j].attack());
             }
         }
         System.out.println("Money + 5");

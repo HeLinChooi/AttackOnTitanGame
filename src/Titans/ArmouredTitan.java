@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class ArmouredTitan extends Titan {
 
-    private int distanceFromWall = 2;
+    private int distanceFromWall = 9;
     private int attack = 5;
 
     public void getCloserToWall() {
@@ -49,20 +49,20 @@ public class ArmouredTitan extends Titan {
                 rightCloseWeaponIndex = i;
             }
         }
-        System.out.println("leftCloseWeaponIndex :" + leftCloseWeaponIndex);
-        System.out.println("rightCloseWeaponIndex :" + rightCloseWeaponIndex);
+//        System.out.println("leftCloseWeaponIndex :" + leftCloseWeaponIndex);
+//        System.out.println("rightCloseWeaponIndex :" + rightCloseWeaponIndex);
         if ((position - leftCloseWeaponIndex) < (rightCloseWeaponIndex - position)) {
-            System.out.println("move left");
+//            System.out.println("move left");
             if (getInfrontWallIndex() != 0) {
                 setInfrontWallIndex(getInfrontWallIndex() - 1);
             }
         } else if ((position - leftCloseWeaponIndex) > (rightCloseWeaponIndex - position)) {
-            System.out.println("move right");
+//            System.out.println("move right");
             if (getInfrontWallIndex() != 9) {
                 setInfrontWallIndex(getInfrontWallIndex() + 1);
             }
         } else {
-            System.out.println("move random direction");
+//            System.out.println("move random direction");
             getCloserToWall();
         }
     }

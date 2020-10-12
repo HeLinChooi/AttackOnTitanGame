@@ -49,6 +49,7 @@ public class Titan {
         // only he show up then can take damage
         if (isShowUp()) {
             this.hp -= amount;
+            System.out.println("The titan takes " + amount + " damage");
             System.out.println("The titan remains HP: " + getHp());
         }
     }

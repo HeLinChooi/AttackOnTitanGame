@@ -6,11 +6,11 @@ import Titans.ColossusTitan;
 public class Ground {
 
     private int sideLength;
-    private char[][] matrix;
+    private String[][] matrix;
 
     public Ground(int sideLength) {
         this.sideLength = sideLength;
-        this.matrix = new char[sideLength][sideLength];
+        this.matrix = new String[sideLength][sideLength];
     }
 
     public void printGround(ColossusTitan c, ArmouredTitan a) {
@@ -24,19 +24,26 @@ public class Ground {
         if (c.isShowUp()) {
             col2 = c.getInfrontWallIndex();
         }
+        // copy into 2D array
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                matrix[i][j] = "   ";
+            }
+        }
+        if (row == 9 && col == col2 && a.isShowUp() && c.isShowUp()) {
+            matrix[row][col] = "AC ";
+        } else {
+            if (a.isShowUp()) {
+                matrix[row][col] = "AA ";
+            }
+            if (c.isShowUp()) {
+                matrix[9][col2] = "CC ";
+            }
+        }
         System.out.println("On The Ground");
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                if (i == 9 && j == col && j == col2 && a.isShowUp() && c.isShowUp()) {
-                    System.out.print("AC ");
-                } else if (i == row && j == col && a.isShowUp()) {
-                    System.out.print("AA ");
-                } else if (i == 9 && j == col2 && c.isShowUp()) {
-                    // c titan on show up on row 8
-                    System.out.print("CC ");
-                } else {
-                    System.out.print("   ");
-                }
+                System.out.print(matrix[i][j]);
             }
             System.out.println("");
         }
