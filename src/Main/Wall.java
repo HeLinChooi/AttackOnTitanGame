@@ -29,8 +29,6 @@ public class Wall {
         for (int i = 0; i < weapons.length; i++) {
             starRemain[i] = weapons[i].getLevel();
             if(starRemain[i]>0){
-//                System.out.println("level > 0");
-//                System.out.println(starRemain[i]);
                 gotWeapon = true;
             }
         }
@@ -51,11 +49,7 @@ public class Wall {
             if (!isRemainStarNotPrinted) {
                 break;
             }
-//            for (int i = 0; i < starRemain.length; i++) {
-//                System.out.print(starRemain[i] + " ");
-//            }
-//            System.out.println("");
-
+            System.out.print("   ");
             for (int i = 0; i < starRemain.length; i++) {
                 if (starRemain[i] == maxLevel) {
                     System.out.print("** ");
@@ -71,12 +65,18 @@ public class Wall {
 //            System.out.println("got wapon");
 //            System.out.println("");
 //        }
-        System.out.println("-- -- -- -- -- -- -- -- -- --     The Wall");
+        System.out.println("   -- -- -- -- -- -- -- -- -- --     The Wall");
+        System.out.print("   ");
+        for (int i = 0; i < wall.length; i++) {
+            System.out.print(" " + i + " ");
+        }
+        System.out.println("    Index");
+        System.out.print("   ");
         for (int i = 0; i < wall.length; i++) {
             System.out.print(wall[i] + " ");
         }
         System.out.println("    HP");
-        System.out.println("-- -- -- -- -- -- -- -- -- --");
+        System.out.println("   -- -- -- -- -- -- -- -- -- --");
 
         System.out.println("");
     }

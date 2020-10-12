@@ -13,7 +13,7 @@ public class Ground {
         this.matrix = new String[sideLength][sideLength];
     }
 
-    public void printGround(ColossusTitan c, ArmouredTitan a) {
+    public void printGround(ColossusTitan c, ArmouredTitan a, String []panel) {
         int row = 0;
         int col = 0;
         if (a.isShowUp()) {
@@ -40,8 +40,13 @@ public class Ground {
                 matrix[9][col2] = "CC ";
             }
         }
+        // append the panel at right
+        matrix[0][9] += panel[0];
+        matrix[1][9] += panel[1];
         System.out.println("On The Ground");
+        System.out.println("Row");
         for (int i = 0; i < matrix.length; i++) {
+            System.out.print(i + "  ");
             for (int j = 0; j < matrix[0].length; j++) {
                 System.out.print(matrix[i][j]);
             }

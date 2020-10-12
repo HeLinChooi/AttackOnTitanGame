@@ -37,7 +37,6 @@ public class World {
 
     public void enemiesTurn(Wall w, Weapon[] weapons, ColossusTitan c, ArmouredTitan a) {
         Random r = new Random();
-        System.out.println("Enemies' turn");
         if (!c.isShowUp()) {
             c.setShowUp(!c.isShowUp());
             System.out.println(String.format("Titan show up and hit wall %d !", c.getInfrontWallIndex()));
@@ -67,8 +66,6 @@ public class World {
                 System.out.println(String.format("Armoured Titan on wall %d !", a.getInfrontWallIndex()));
                 // if the weapon is in front of titan
                 int position = a.getInfrontWallIndex();
-//                for (int i = 0; i < weapons.length; i++) {
-//                    if (i == a.getInfrontWallIndex()) {
                 if (weapons[position].getLevel() > 0) {
 //                    System.out.println("got weapon");
                     weapons[position].levelDownTo0();
@@ -80,8 +77,6 @@ public class World {
 //                    System.out.println("no weapon on wall any more");
                     w.reduceHPOn1Unit(a.attack(), position);
                 }
-//                    }
-//                }
             } else {
                 a.getCloserToWall();
                 System.out.println("current distance: " + a.getDistanceFromWall());
@@ -117,22 +112,28 @@ public class World {
         }
     }
 
-    public void upgradeWall(Wall w) {
+    public void upgradeWall(ColossusTitan c, ArmouredTitan a, Weapon[] weapons, Wall w, Ground g, String[] panel, int hourIndex) {
         Scanner s = new Scanner(System.in);
-        System.out.println("Do you want to upgrade all walls? (press 1 if yes, press Enter if no) Current money amount: " + money);
+        System.out.println("Do you want to upgrade all walls? (press 1 if yes, press Enter if no) Current coin number: " + money);
         String inputStr = s.nextLine();
         int input = inputStr.equals("") ? 2 : Integer.parseInt(inputStr);
+        refreshDisplay(c, a, weapons, w, g, panel, hourIndex);
         if (input == 1) {
             System.out.println("How many HP do you want to add up?");
             int amount = s.nextInt();
             s.nextLine();
             int expenses = w.addHPForAll(money, amount);
             spendMoney(expenses);
+            refreshDisplay(c, a, weapons, w, g, panel, hourIndex);
         }
+        // certain walls
+        System.out.println("Player's turn");
         System.out.println("Choose the wall(s) that you would like to upgrade (Type a string of integer or hit Enter to skip)");
         int[] weaponUpgradeAraay = new int[10];
         String indexStr = s.nextLine();
-        System.out.println("How many HP do you want to add up to the wall(s)? Current money amount: " + money);
+        refreshDisplay(c, a, weapons, w, g, panel, hourIndex);
+        System.out.println("Player's turn");
+        System.out.println("How many HP do you want to add up to the wall(s)? Current coin number: " + money);
         for (int i = 0; i < indexStr.length(); i++) {
             // if player want to upgrade this weapon
             int amount = s.nextInt();
@@ -145,14 +146,27 @@ public class World {
         }
     }
 
-    public void playerTurn(Weapon[] weapons, Wall w) {
+    public void playerTurn(ColossusTitan c, ArmouredTitan a, Weapon[] weapons, Wall w, Ground g, String[] panel, int hourIndex) {
         Scanner s = new Scanner(System.in);
         System.out.println("Player's turn");
         upgradeWeapons(weapons);
-        upgradeWall(w);
+        refreshDisplay(c, a, weapons, w, g, panel, hourIndex);
+        System.out.println("Player's turn");
+        upgradeWall(c, a, weapons, w, g, panel, hourIndex);
+//        refreshDisplay(c, a, weapons, w, g, panel);
+//        System.out.println("Player's turn");
+//        upgradeCertainWalls(c, a, weapons, w, g, panel);
+    }
+
+    public void refreshDisplay(ColossusTitan c, ArmouredTitan a, Weapon[] weapons, Wall w, Ground g, String[] panel, int hourIndex) {
+        panel[0] = "    HOUR " + hourIndex;
+        panel[1] = "    Coin: " + getMoney();
+        g.printGround(c, a, panel);
+        w.printWallWithHP(weapons);
     }
 
     public void run() {
+        Scanner s = new Scanner(System.in);
         Wall w = new Wall(10);
         Ground g = new Ground(10);
         // setup weapon reference, all weapon level 0
@@ -164,23 +178,29 @@ public class World {
         ArmouredTitan a = new ArmouredTitan();
         // start the game
         for (int i = 0; i <= 24; i++) {
-            // n th hour
-            System.out.println("HOUR " + i);
-            System.out.println("Money: " + getMoney());
-//            if (i > 5) {
-            enemiesTurn(w, weapons, c, a);
-//            }
-            g.printGround(c, a);
-            w.printWallWithHP(weapons);
+            String[] panel = new String[10];
+            if (i == 0) {
+                System.out.println("The Game Started\n");
+            } else {
+                System.out.println("Enemies' turn(Enter to proceed)");
+                s.nextLine();
+            }
+
+            if (i > 5) {
+                enemiesTurn(w, weapons, c, a);
+            } else {
+                System.out.println("No enemy yet\n");
+            }
+            refreshDisplay(c, a, weapons, w, g, panel, i);
             if (w.isWallHasFallen()) {
                 System.out.println("THE WALL HAS FALLEN");
                 System.out.println("YOU LOST");
                 break;
             }
             // player's turn
-            playerTurn(weapons, w);
-            // Show Result
-            showResult(c, a, weapons, w, g);
+            playerTurn(c, a, weapons, w, g, panel, i);
+            // Show Player Turn Result
+            showResult(c, a, weapons, w, g, panel, i);
             // check if the titam is dead
             if (c.isDead()) {
                 System.out.println("YOU WIN!");
@@ -189,28 +209,32 @@ public class World {
         }
     }
 
-    public void showResult(ColossusTitan c, ArmouredTitan a, Weapon[] weapons, Wall w, Ground g) {
-        System.out.println("---------------- Result ----------------");
-        g.printGround(c, a);
-        w.printWallWithHP(weapons);
+    public void showResult(ColossusTitan c, ArmouredTitan a, Weapon[] weapons, Wall w, Ground g, String[] panel, int hourIndex) {
+//        System.out.println("---------------- Result ----------------");
+        refreshDisplay(c, a, weapons, w, g, panel, hourIndex);
         // attack the titan with our new upgraded weapons!
+        boolean titanAttacked = false;
         for (int j = 0; j < weapons.length; j++) {
             // the titan is on this position
             if (c.getInfrontWallIndex() == j) {
                 // attack him
-
+                titanAttacked = true;
                 c.reduceHP(weapons[j].attack());
             }
             if (a.getInfrontWallIndex() == j) {
                 // attack him
+                titanAttacked = true;
                 a.reduceHP(weapons[j].attack());
             }
         }
-        System.out.println("Money + 5");
+        if (titanAttacked) {
+            refreshDisplay(c, a, weapons, w, g, panel, hourIndex);
+        }
+        System.out.println("Coin + 5");
         setMoney(getMoney() + 5);
 //        if (c.isShowUp()) {
 //            System.out.println(String.format("Titan still in front of the wall %d and he hit the wall", c.getInfrontWallIndex()));
 //        }
-        System.out.println("----------------------------------------");
+//        System.out.println("----------------------------------------");
     }
 }

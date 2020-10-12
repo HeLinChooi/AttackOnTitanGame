@@ -8,6 +8,10 @@ public class ArmouredTitan extends Titan {
     private int distanceFromWall = 9;
     private int attack = 5;
 
+    public ArmouredTitan() {
+        this.hp = 100;
+    }
+
     public void getCloserToWall() {
         Random r = new Random();
         if (r.nextInt(2) == 1) {
